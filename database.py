@@ -10,19 +10,32 @@ except ImportError:
     pass
 
 
+def _setting(name, default=None):
+    """Read a setting from environment variables, then from Streamlit secrets."""
+    value = os.getenv(name)
+    if value is not None:
+        return value
+    try:
+        import streamlit as st
+        return st.secrets.get(name, default)
+    except Exception:
+        return default
+
+
 def connection():
-    password = os.getenv("DB_PASSWORD")
+    password = _setting("DB_PASSWORD")
     if password is None:
         raise RuntimeError(
-            "DB_PASSWORD is not set. Copy .env.example to .env and fill in your PostgreSQL password."
+            "DB_PASSWORD is not set. Add it to .env locally, or to the app's Secrets on Streamlit Cloud."
         )
 
     con = psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME", "ecommerce"),
-        user=os.getenv("DB_USER", "postgres"),
+        host=_setting("DB_HOST", "localhost"),
+        database=_setting("DB_NAME", "ecommerce"),
+        user=_setting("DB_USER", "postgres"),
         password=password,
-        port=os.getenv("DB_PORT", "5432"),
+        port=_setting("DB_PORT", "5432"),
+        sslmode=_setting("DB_SSLMODE", "prefer"),
     )
 
     if con:

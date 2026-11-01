@@ -34,7 +34,7 @@ A Python and PostgreSQL application for managing customers, products and sales, 
 2. Clone the repo and install the dependencies:
 
    ```bash
-   git clone https://github.com/<your-username>/smart-inventory-billing-system.git
+   git clone https://github.com/piyushydv07/smart-inventory-billing-system.git
    cd smart-inventory-billing-system
    python -m venv venv
    source venv/bin/activate        # on Windows: venv\Scripts\activate
